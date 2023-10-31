@@ -1,3 +1,85 @@
 <resources>
-    <string name="app_name">SQLDatabasePokeTracker</string>
+    <string name="app_name">Poke Tracker</string>
+    <string name="tagline">Register new catch</string>
+    <string name="stats_heading">Base Stats</string>
+    <string name="nameLabel">Name</string>
+    <string name="nationalNumLabel">National Number</string>
+    <string name="speciesLabel">Species</string>
+    <string name="GenderLabel">Gender</string>
+    <string name="levelLabel">Level</string>
+    <string name="HeightLabel">Height</string>
+    <string name="WeightLabel">Weight</string>
+    <string name="HPLabel">HP</string>
+    <string name="attackLabel">Attack</string>
+    <string name="defenseLabel">Defense</string>
+    <string name="resetLabel">Reset</string>
+    <string name="saveLabel">Save</string>
+    <string name="nextLabel">Change View</string>
+    <string name="femaleLabel">Female</string>
+    <string name="maleLabel">Male</string>
+    <string name="unknownLabel">Unk.</string>
+    <string name="zero">0</string>
+    <string name="weightDefault">800.0</string>
+    <string name="heightDefault">2.2</string>
+    <string name="speciesDefault">Wild Horse Pokémon</string>
+    <string name="nameDefault">Glastrier</string>
+    <string name="nnDefault">896</string>
+    <string name="linearView">Linear View</string>
+    <string name="tableView">Table View</string>
+    <string name="constraintView">Constraint View</string>
+
+
+    <string-array name="values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+    </string-array>
+
 </resources>

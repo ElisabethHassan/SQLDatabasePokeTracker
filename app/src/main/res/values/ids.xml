@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="app_heading" type="id" />
+    <item name="tagLine_tv" type="id" />
+    <item name="stats_heading" type="id" />
+    <item name="levelLabel_tv" type="id" />
+    <item name="hp_editText" type="id" />
+    <item name="defense_editText" type="id" />
+    <item name="attack_editText" type="id" />
+    <item name="defenseLabel_tv" type="id" />
+    <item name="attackLabel_tv" type="id" />
+    <item name="national_editview" type="id" />
+    <item name="hpLabel_tv" type="id" />
+    <item name="speciesLabel_tv" type="id" />
+    <item name="nationalLabel_tv" type="id" />
+    <item name="nameLabel_tv" type="id" />
+    <item name="weightLabel_tv" type="id" />
+    <item name="heightLabel_tv" type="id" />
+    <item name="genderLabel_tv" type="id" />
+    <item name="species_editText" type="id" />
+    <item name="name_editText" type="id" />
+    <item name="weight_editText" type="id" />
+    <item name="height_editText" type="id" />
+    <item name="spinner_box" type="id" />
+    <item name="button" type="id" />
+    <item name="save_button" type="id" />
+    <item name="radioGroup" type="id" />
+</resources>
