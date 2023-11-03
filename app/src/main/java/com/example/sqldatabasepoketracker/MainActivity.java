@@ -2,6 +2,8 @@ package com.example.sqldatabasepoketracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private Button resetButton;
     private ListView listView;
     RadioGroup gender;
-
-
+    String[] mProjection;
+    String[] mListColumns;
+    String mSelectionClause;
+    String[] mSelectionArgs;
+    String mOrderBy;
 
     View.OnClickListener submitListener = new View.OnClickListener() {
         @Override
@@ -52,14 +58,16 @@ public class MainActivity extends AppCompatActivity {
             try {
                 int nationaln = Integer.parseInt(nationalNumStr);
                 if (nationaln < 0 || nationaln > 1010) {
-                    nationalNumLabel.setTextColor(Color.RED);
+                    //nationalNumLabel.setTextColor(Color.RED);
+                    nationalNumLabel.append("*");
                     isValid = false;
                 } else {
                     nationalNumLabel.setTextColor(Color.BLACK);
                 }
                 //make sure the input is a number
             } catch (NumberFormatException e) {
-                nationalNumLabel.setTextColor(Color.RED);
+                //nationalNumLabel.setTextColor(Color.RED);
+                nationalNumLabel.append("*");
                 isValid = false;
             }
 
@@ -80,7 +88,8 @@ public class MainActivity extends AppCompatActivity {
             }
             //checks that it is in the alphabet
             if (!isAlphabetical) {
-                nameLabel.setTextColor(Color.RED);
+                //nameLabel.setTextColor(Color.RED);
+                nameLabel.append("*");
                 isValid = false;
             } else {
                 nameLabel.setTextColor(Color.BLACK);
@@ -88,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
             // validate Species
             String speciesStr = species.getText().toString();
             if (speciesStr.isEmpty()) {
-                speciesLabel.setTextColor(Color.RED);
+                //speciesLabel.setTextColor(Color.RED);
+                speciesLabel.append("*");
                 isValid = false;
             } else {
                 speciesLabel.setTextColor(Color.BLACK);
@@ -99,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 heightStr = heightStr.substring(0, heightStr.length() - 1);
             }
             if (heightStr.isEmpty() || Double.parseDouble(heightStr) < 0.3 || Double.parseDouble(heightStr) > 19.99) {
-                heightLabel.setTextColor(Color.RED);
+                //heightLabel.setTextColor(Color.RED);
+                heightLabel.append("*");
                 isValid = false;
             } else {
                 heightLabel.setTextColor(Color.BLACK);
@@ -110,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 weightStr = weightStr.substring(0, weightStr.length() - 2);
             }
             if (weightStr.isEmpty() || Double.parseDouble(weightStr) < 0.1 || Double.parseDouble(weightStr) > 820.00) {
-                weightLabel.setTextColor(Color.RED);
+                //weightLabel.setTextColor(Color.RED);
+                weightLabel.append("*");
                 isValid = false;
             } else {
                 weightLabel.setTextColor(Color.BLACK);
@@ -124,11 +136,13 @@ public class MainActivity extends AppCompatActivity {
                     isHpValid = true;
                 }
             } catch (NumberFormatException e) {
-                hpLabel.setTextColor(Color.RED);
+                //hpLabel.setTextColor(Color.RED);
+                hpLabel.append("*");
                 isValid = false;
             }
             if (!isHpValid) {
-                hpLabel.setTextColor(Color.RED);
+                //hpLabel.setTextColor(Color.RED);
+                hpLabel.append("*");
                 isValid = false;
             } else {
                 hpLabel.setTextColor(Color.BLACK);
@@ -142,11 +156,13 @@ public class MainActivity extends AppCompatActivity {
                     isAttackValid = true;
                 }
             } catch (NumberFormatException e) {
-                attackLabel.setTextColor(Color.RED);
+                //attackLabel.setTextColor(Color.RED);
+                attackLabel.append("*");
                 isValid = false;
             }
             if (!isAttackValid) {
-                attackLabel.setTextColor(Color.RED);
+                //attackLabel.setTextColor(Color.RED);
+                attackLabel.append("*");
                 isValid = false;
             } else {
                 attackLabel.setTextColor(Color.BLACK);
@@ -160,11 +176,13 @@ public class MainActivity extends AppCompatActivity {
                     isDefenseValid = true;
                 }
             } catch (NumberFormatException e) {
-                defenseLabel.setTextColor(Color.RED);
+                //defenseLabel.setTextColor(Color.RED);
+                defenseLabel.append("*");
                 isValid = false;
             }
             if (!isDefenseValid) {
-                defenseLabel.setTextColor(Color.RED);
+               // defenseLabel.setTextColor(Color.RED);
+                defenseLabel.append("*");
                 isValid = false;
             } else {
                 defenseLabel.setTextColor(Color.BLACK);
@@ -174,13 +192,15 @@ public class MainActivity extends AppCompatActivity {
             if (selectedLevel.isEmpty()) {
                 // You may need to adjust this validation based on Spinner's values
                 isValid = false;
-                spinnerLabel.setTextColor(Color.RED);
+                spinnerLabel.append("*");
+                //spinnerLabel.setTextColor(Color.RED);
             }
             // Validate Gender (Radio buttons)
             int selectedGenderId = gender.getCheckedRadioButtonId();
             if (selectedGenderId == -1) {
                 isValid = false;
-                genderLabel.setTextColor(Color.RED);
+//                genderLabel.setTextColor(Color.RED);
+                genderLabel.append("*");
             } else {
                 genderLabel.setTextColor(Color.BLACK);
             }
@@ -191,6 +211,22 @@ public class MainActivity extends AppCompatActivity {
                 // Notify the user about errors via Toast
                 Toast.makeText(MainActivity.this, "Please fix the errors in red.", Toast.LENGTH_SHORT).show();
             }
+
+            //fetches data from user
+            ContentValues newValues = new ContentValues();
+            if(!newValues.containsKey(nationalNumStr))  newValues.put(MyContentProvider.COLUMN1_NAME, nationalNumStr );
+            if(!newValues.containsKey(nameET)) newValues.put(MyContentProvider.COLUMN2_NAME, nameET );
+            if(!newValues.containsKey(speciesStr)) newValues.put(MyContentProvider.COLUMN3_NAME, speciesStr );
+//            if(!newValues.containsKey(selectedGenderId)) newValues.put(MyContentProvider.COLUMN4_NAME, selectedGenderId);
+            if(!newValues.containsKey(heightStr)) newValues.put(MyContentProvider.COLUMN5_NAME, heightStr );
+            if(!newValues.containsKey(weightStr))newValues.put(MyContentProvider.COLUMN6_NAME, weightStr );
+            if(!newValues.containsKey(selectedLevel)) newValues.put(MyContentProvider.COLUMN7_NAME, selectedLevel );
+            if(!newValues.containsKey(hpStr)) newValues.put(MyContentProvider.COLUMN8_NAME, hpStr );
+            if(!newValues.containsKey(attackStr)) newValues.put(MyContentProvider.COLUMN9_NAME, attackStr );
+            if(!newValues.containsKey(defenseStr)) newValues.put(MyContentProvider.COLUMN10_NAME, defenseStr );
+
+            //inserts data into the database through content URI
+            getContentResolver().insert(MyContentProvider.contentURI, newValues);
         }
     };
 
@@ -216,14 +252,6 @@ public class MainActivity extends AppCompatActivity {
             genderLabel.setTextColor(Color.BLACK);
         }
     };
-
-//    View.OnClickListener switchLayoutListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            switchLayout();
-//        }
-//    };
-
 
     AdapterView.OnItemSelectedListener spinListener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -269,14 +297,26 @@ public class MainActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.save_button);
         genderLabel = findViewById(R.id.genderLabel_tv);
         spinnerLabel = findViewById(R.id.levelLabel_tv);
-        listView = findViewById();
-
-
-
+//        listView = findViewById(R.id.);
 
         spinner.setOnItemSelectedListener(spinListener);
         resetButton.setOnClickListener(resetButtonListener);
         saveButton.setOnClickListener(submitListener);
+
+        Cursor cursor = getContentResolver().query(MyContentProvider.contentURI, null, null, null, null);
+        mListColumns = new String[] {MyContentProvider.COLUMN1_NAME,MyContentProvider.COLUMN2_NAME, MyContentProvider.COLUMN3_NAME, MyContentProvider.COLUMN4_NAME,
+                MyContentProvider.COLUMN5_NAME, MyContentProvider.COLUMN6_NAME, MyContentProvider.COLUMN7_NAME, MyContentProvider.COLUMN8_NAME,
+                MyContentProvider.COLUMN9_NAME, MyContentProvider.COLUMN10_NAME,};
+        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
+                this,
+                R.layout.row,
+                cursor,
+                mListColumns,
+                new int[] { R.id.nameTextView, R.id.descriptionTextView},
+                0
+        );
+        //TODO: initalize the listview
+        listView.setAdapter(cursorAdapter);
 
     }
 }
