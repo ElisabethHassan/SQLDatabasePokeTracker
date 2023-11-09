@@ -25,4 +25,5 @@
     <item name="button" type="id" />
     <item name="save_button" type="id" />
     <item name="radioGroup" type="id" />
+    <item name="listview_id" type="id" />
 </resources>

@@ -3,9 +3,13 @@ package com.example.sqldatabasepoketracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -37,15 +41,16 @@ public class MainActivity extends AppCompatActivity {
     private TextView genderLabel;
     private TextView spinnerLabel;
     private Spinner spinner;
-    private Button saveButton;
+    private Button saveButton, viewButton;
     private Button resetButton;
     private ListView listView;
     RadioGroup gender;
     String[] mProjection;
-    String[] mListColumns;
     String mSelectionClause;
     String[] mSelectionArgs;
     String mOrderBy;
+    //fetches data from user and puts into the database
+    ContentValues newValues = new ContentValues();
 
     View.OnClickListener submitListener = new View.OnClickListener() {
         @Override
@@ -63,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
                     isValid = false;
                 } else {
                     nationalNumLabel.setTextColor(Color.BLACK);
+//                    nationalNumLabel.setText(nationalNumStr.substring(0,nationalNumLabel.length()-1));
+                    newValues.put(MyContentProvider.COLUMN1_NAME, nationalNumStr );
                 }
                 //make sure the input is a number
             } catch (NumberFormatException e) {
@@ -93,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             } else {
                 nameLabel.setTextColor(Color.BLACK);
+//                nameLabel.setText(nameET.substring(0,nameLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN2_NAME, nameET );
             }
             // validate Species
             String speciesStr = species.getText().toString();
@@ -102,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             } else {
                 speciesLabel.setTextColor(Color.BLACK);
+//                speciesLabel.setText(speciesStr.substring(0,speciesLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN3_NAME, speciesStr );
             }
             // Validate Height
             String heightStr = height.getText().toString();
@@ -114,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             } else {
                 heightLabel.setTextColor(Color.BLACK);
+//                heightLabel.setText(heightStr.substring(0,heightLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN5_NAME, heightStr );
             }
             // Validate Weight
             String weightStr = weight.getText().toString();
@@ -125,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 weightLabel.append("*");
                 isValid = false;
             } else {
-                weightLabel.setTextColor(Color.BLACK);
+//                weightLabel.setText(weightStr.substring(0,weightLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN6_NAME, weightStr );
             }
             // Validate HP
             String hpStr = hp.getText().toString();
@@ -146,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             } else {
                 hpLabel.setTextColor(Color.BLACK);
+//                hpLabel.setText(hpStr.substring(0,hpLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN8_NAME, hpStr );
             }
             // Validate Attack
             String attackStr = attack.getText().toString();
@@ -166,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             } else {
                 attackLabel.setTextColor(Color.BLACK);
+//                attackLabel.setText(attackStr.substring(0,attackLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN9_NAME, attackStr );
             }
             // Validate Defense
             String defenseStr = defense.getText().toString();
@@ -186,6 +204,8 @@ public class MainActivity extends AppCompatActivity {
                 isValid = false;
             } else {
                 defenseLabel.setTextColor(Color.BLACK);
+//                genderLabel.setText(defenseLabel.getText().toString().substring(0,defenseLabel.length()-1));
+                newValues.put(MyContentProvider.COLUMN10_NAME, defenseStr );
             }
             // Validate Level (Spinner)
             String selectedLevel = spinner.getSelectedItem().toString();
@@ -203,30 +223,46 @@ public class MainActivity extends AppCompatActivity {
                 genderLabel.append("*");
             } else {
                 genderLabel.setTextColor(Color.BLACK);
+//                genderLabel.setText(genderLabel.getText().toString().substring(0,genderLabel.length()-1));
             }
             if (isValid) {
                 // All checks passed, display a success Toast
                 Toast.makeText(MainActivity.this, "Successful! Information stored in the database.", Toast.LENGTH_SHORT).show();
             } else {
                 // Notify the user about errors via Toast
-                Toast.makeText(MainActivity.this, "Please fix the errors in red.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Please fix the errors.", Toast.LENGTH_SHORT).show();
             }
 
-            //fetches data from user
-            ContentValues newValues = new ContentValues();
-            if(!newValues.containsKey(nationalNumStr))  newValues.put(MyContentProvider.COLUMN1_NAME, nationalNumStr );
-            if(!newValues.containsKey(nameET)) newValues.put(MyContentProvider.COLUMN2_NAME, nameET );
-            if(!newValues.containsKey(speciesStr)) newValues.put(MyContentProvider.COLUMN3_NAME, speciesStr );
-//            if(!newValues.containsKey(selectedGenderId)) newValues.put(MyContentProvider.COLUMN4_NAME, selectedGenderId);
-            if(!newValues.containsKey(heightStr)) newValues.put(MyContentProvider.COLUMN5_NAME, heightStr );
-            if(!newValues.containsKey(weightStr))newValues.put(MyContentProvider.COLUMN6_NAME, weightStr );
-            if(!newValues.containsKey(selectedLevel)) newValues.put(MyContentProvider.COLUMN7_NAME, selectedLevel );
-            if(!newValues.containsKey(hpStr)) newValues.put(MyContentProvider.COLUMN8_NAME, hpStr );
-            if(!newValues.containsKey(attackStr)) newValues.put(MyContentProvider.COLUMN9_NAME, attackStr );
-            if(!newValues.containsKey(defenseStr)) newValues.put(MyContentProvider.COLUMN10_NAME, defenseStr );
+
+
+//
+//            if(!newValues.containsKey(nationalNumStr))  newValues.put(MyContentProvider.COLUMN1_NAME, nationalNumStr );
+//            if(!newValues.containsKey(nameET)) newValues.put(MyContentProvider.COLUMN2_NAME, nameET );
+//            if(!newValues.containsKey(speciesStr)) newValues.put(MyContentProvider.COLUMN3_NAME, speciesStr );
+////            if(!newValues.containsKey(selectedGenderId)) newValues.put(MyContentProvider.COLUMN4_NAME, selectedGenderId);
+//            if(!newValues.containsKey(heightStr)) newValues.put(MyContentProvider.COLUMN5_NAME, heightStr );
+//            if(!newValues.containsKey(weightStr))newValues.put(MyContentProvider.COLUMN6_NAME, weightStr );
+//            if(!newValues.containsKey(selectedLevel)) newValues.put(MyContentProvider.COLUMN7_NAME, selectedLevel );
+//            if(!newValues.containsKey(hpStr)) newValues.put(MyContentProvider.COLUMN8_NAME, hpStr );
+//            if(!newValues.containsKey(attackStr)) newValues.put(MyContentProvider.COLUMN9_NAME, attackStr );
+//            if(!newValues.containsKey(defenseStr)) newValues.put(MyContentProvider.COLUMN10_NAME, defenseStr );
 
             //inserts data into the database through content URI
             getContentResolver().insert(MyContentProvider.contentURI, newValues);
+//            Cursor result = provider.query(MyContentProvider.contentURI, null, null, null, null);
+            boolean exits = false;
+
+
+        }
+    };
+
+    View.OnClickListener viewButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, DatabaseActivity.class);
+            startActivity(intent);
+
+
         }
     };
 
@@ -253,6 +289,16 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    AdapterView.OnItemClickListener clickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(MyContentProvider.COLUMN1_NAME));
+        }
+    };
+
+
+
     AdapterView.OnItemSelectedListener spinListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -272,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        setContentView(R.layout.row);
 //        setContentView(R.layout.linear);
         //setContentView(R.layout.table);
 
@@ -297,26 +344,27 @@ public class MainActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.save_button);
         genderLabel = findViewById(R.id.genderLabel_tv);
         spinnerLabel = findViewById(R.id.levelLabel_tv);
+        viewButton = findViewById(R.id.viewButton_id);
 //        listView = findViewById(R.id.);
 
         spinner.setOnItemSelectedListener(spinListener);
         resetButton.setOnClickListener(resetButtonListener);
         saveButton.setOnClickListener(submitListener);
+        viewButton.setOnClickListener(viewButtonListener);
 
-        Cursor cursor = getContentResolver().query(MyContentProvider.contentURI, null, null, null, null);
-        mListColumns = new String[] {MyContentProvider.COLUMN1_NAME,MyContentProvider.COLUMN2_NAME, MyContentProvider.COLUMN3_NAME, MyContentProvider.COLUMN4_NAME,
-                MyContentProvider.COLUMN5_NAME, MyContentProvider.COLUMN6_NAME, MyContentProvider.COLUMN7_NAME, MyContentProvider.COLUMN8_NAME,
-                MyContentProvider.COLUMN9_NAME, MyContentProvider.COLUMN10_NAME,};
-        SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
-                this,
-                R.layout.row,
-                cursor,
-                mListColumns,
-                new int[] { R.id.nameTextView, R.id.descriptionTextView},
-                0
-        );
-        //TODO: initalize the listview
-        listView.setAdapter(cursorAdapter);
+
+
+
+//        registerForContextMenu(listView);
 
     }
+//    @Override
+//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//        if (v.getId() == R.id.listview_id) {
+//            MenuInflater inflater = getMenuInflater();
+//            inflater.inflate(R.menu.context_menu, menu); // Create a context menu resource (e.g., context_menu.xml)
+//        }
+//    }
+
+
 }

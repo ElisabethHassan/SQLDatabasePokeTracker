@@ -24,18 +24,18 @@ public class MyContentProvider extends ContentProvider {
     public static final String AUTHORITY = "com.example.database";
     public static final Uri contentURI = Uri.parse("content://" + AUTHORITY + "/" + DBNAME);
     private MainDatabaseHelper SQLHelper;
-    private static final String CREATE_DB_QUERY = "CREATE TABLE " + TABLE_NAME + //SQL query
+    private static final String CREATE_DB_QUERY = " CREATE TABLE " + TABLE_NAME + //SQL query
             "(_ID INTEGER PRIMARY KEY," +
-            COLUMN1_NAME + "TEXT,"
-            + COLUMN2_NAME + "TEXT,"
-            +COLUMN3_NAME + "TEXT,"
-            +COLUMN4_NAME + "TEXT,"
-            +COLUMN5_NAME + "TEXT,"
-            +COLUMN6_NAME + "TEXT,"
-            +COLUMN7_NAME + "TEXT,"
-            +COLUMN8_NAME + "TEXT,"
-            +COLUMN9_NAME + "TEXT,"
-            + COLUMN10_NAME + "TEXT)";
+            COLUMN1_NAME + " TEXT, "
+            + COLUMN2_NAME + " TEXT, "
+            +COLUMN3_NAME + " TEXT, "
+            +COLUMN4_NAME + " TEXT, "
+            +COLUMN5_NAME + " TEXT, "
+            +COLUMN6_NAME + " TEXT, "
+            +COLUMN7_NAME + " TEXT, "
+            +COLUMN8_NAME + " TEXT, "
+            +COLUMN9_NAME + " TEXT, "
+            + COLUMN10_NAME + "TEXT);";
 
     public MyContentProvider() {}
 
@@ -68,6 +68,7 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         long id = SQLHelper.getWritableDatabase().insert(TABLE_NAME,null, values);
+
         return Uri.withAppendedPath(contentURI , "" + id);
     }
 

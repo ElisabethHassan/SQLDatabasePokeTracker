@@ -27,6 +27,7 @@
     <string name="linearView">Linear View</string>
     <string name="tableView">Table View</string>
     <string name="constraintView">Constraint View</string>
+    <string name="view">View Database</string>
 
 
     <string-array name="values">
