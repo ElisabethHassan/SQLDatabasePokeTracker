@@ -20,37 +20,30 @@ public class DatabaseActivity extends AppCompatActivity {
     Cursor cursor;
 //     = getContentResolver().query(MyContentProvider.contentURI, null, null, null, null);
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.row);
+        setContentView(R.layout.activity_database);
 
 
-//        Cursor cursor = getContentResolver().query(MyContentProvider.contentURI, null, null, null, null);
-//        mListColumns = new String[] {MyContentProvider.COLUMN1_NAME,MyContentProvider.COLUMN2_NAME, MyContentProvider.COLUMN3_NAME, MyContentProvider.COLUMN4_NAME,
-//                MyContentProvider.COLUMN5_NAME, MyContentProvider.COLUMN6_NAME, MyContentProvider.COLUMN7_NAME, MyContentProvider.COLUMN8_NAME,
-//                MyContentProvider.COLUMN9_NAME, MyContentProvider.COLUMN10_NAME,};
+        Cursor cursor = getContentResolver().query(MyContentProvider.contentURI, null, null, null, null);
+        mListColumns = new String[] {Pokemon.COLUMN2_NAME, Pokemon.COLUMN1_NATIONAL_NUMBER, Pokemon.COLUMN3_SPECIES, Pokemon.COLUMN5_HEIGHT, Pokemon.COLUMN6_WEIGHT, Pokemon.COLUMN7_LEVEL, Pokemon.COLUMN8_HP, Pokemon.COLUMN9_ATTACK, Pokemon.COLUMN10_DEFENSE, Pokemon.COLUMN4_GENDER};
         SimpleCursorAdapter cursorAdapter = new SimpleCursorAdapter(
-                this,
+                getApplicationContext(),
                 R.layout.row,
                 cursor,
-                null,
-//                mListColumns,
-                new int[] { R.id.listview_id},
+                mListColumns,
+                new int[] { R.id.pokeName_id,R.id.natNum_id, R.id.species_id, R.id.height_id, R.id.weight_id, R.id.level_id, R.id.hp_id, R.id.attack_id, R.id.defense_id, R.id.gender_id},
                 0
-
         );
 
         //TODO: initalize the listview
-        listView = findViewById(R.id.listview_id);
+        listView = findViewById(R.id.listview);
         listView.setAdapter(cursorAdapter);
 
         // Notify the adapter that the data has changed (for example, after syncing the database)
         cursor = getContentResolver().query(MyContentProvider.contentURI, projection, null, null, sortOrder);
         cursorAdapter.swapCursor(cursor);
-
-
 
 
     }
